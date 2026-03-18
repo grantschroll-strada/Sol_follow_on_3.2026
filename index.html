@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sol Health — Follow-On Investment Brief | Strada Education Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy:      #1B3A5C;
+  --navy-deep: #112540;
+  --gold:      #C4882B;
+  --gold-lt:   #E8B86D;
+  --orange:    #E8744A;
+  --cream:     #F7F4EF;
+  --white:     #FFFFFF;
+  --dark:      #1A1A2E;
+  --mid:       #4A5568;
+  --light:     #8896A8;
+  --border:    #DDD8CE;
+  --green:     #2E7D52;
+  --red:       #C0392B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Serif 4',Georgia,serif;font-weight:300;background:var(--cream);color:var(--dark);font-size:16px;line-height:1.7}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--navy-deep);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.nav-logo{width:30px;height:30px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:15px;color:#fff}
+.nav-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,.6);text-transform:uppercase}
+.nav-links{display:flex;gap:22px;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--gold-lt)}
+.nav-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;background:var(--orange);color:#fff;padding:4px 12px;border-radius:20px;white-space:nowrap}
+
+/* HERO */
+.hero{background:var(--navy);position:relative;overflow:hidden;padding:68px 64px 56px}
+.hero::before{content:'';position:absolute;top:-100px;right:-80px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(196,136,43,.18) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-40px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(232,116,74,.12) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:18px}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.1;color:#fff;margin-bottom:8px}
+.hero-title span{color:var(--gold-lt)}
+.hero-link{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.45);text-decoration:none;margin-bottom:18px;transition:color .2s}
+.hero-link:hover{color:var(--gold-lt)}
+.hero-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,.62);margin-bottom:44px;max-width:520px}
+.deal-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden}
+.deal-item{background:rgba(255,255,255,.05);padding:20px 20px;transition:background .2s}
+.deal-item:hover{background:rgba(255,255,255,.1)}
+.deal-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+.deal-value{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#fff}
+.deal-value.hi{color:var(--gold-lt)}
+.deal-note{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* LAYOUT */
+.container{max-width:1120px;margin:0 auto;padding:0 40px}
+.section{padding:60px 0}
+.section+.section{border-top:1px solid var(--border)}
+.section-header{display:flex;align-items:baseline;gap:16px;margin-bottom:36px}
+.section-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.1em}
+.section-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--navy)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+
+/* METRIC CARDS — dark navy palette */
+.metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.metric-card{background:var(--navy);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 16px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.metric-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,58,92,.25)}
+.metric-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:opacity .2s}
+.metric-card:hover::after{opacity:1}
+.metric-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:8px}
+.metric-value{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:#fff}
+.metric-card:nth-child(even) .metric-value{color:var(--orange)}
+.metric-change{font-size:11px;margin-top:4px}
+.metric-change.up{color:rgba(255,255,255,.5)}
+
+/* scroll offset for sticky nav */
+.section{scroll-margin-top:64px}
+
+/* CHART CARDS */
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:28px 28px 22px}
+.chart-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.chart-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--navy)}
+.chart-sub{font-size:12px;color:var(--light);margin-top:2px}
+.chart-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--cream);color:var(--mid);padding:4px 10px;border-radius:20px;border:1px solid var(--border);white-space:nowrap}
+
+/* FIN TABLES */
+.fin-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+.fin-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+.fin-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);background:var(--cream);padding:12px 18px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.fin-table td{padding:13px 18px;border-bottom:1px solid rgba(221,216,206,.5);vertical-align:middle;color:var(--dark)}
+.fin-table tr:last-child td{border-bottom:none}
+.fin-table tr:hover td{background:rgba(196,136,43,.04)}
+.fin-table .bold-row td{font-weight:600;background:rgba(27,58,92,.03)}
+.fin-table .total-row td{font-weight:600;font-family:'DM Mono',monospace;font-size:12px;border-top:2px solid var(--navy);background:rgba(27,58,92,.05)}
+.neg{color:var(--red)}
+.pos{color:var(--green)}
+.warn{color:var(--gold)}
+.col-r{text-align:right}
+
+/* CALLOUT */
+.callout{background:rgba(196,136,43,.07);border:1px solid rgba(196,136,43,.25);border-left:4px solid var(--gold);border-radius:10px;padding:20px 24px}
+.callout-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.callout p{font-size:14px;line-height:1.7;color:var(--mid)}
+
+/* ALIGN CARDS */
+.align-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:28px;border-left:4px solid var(--gold)}
+.align-icon{width:40px;height:40px;background:rgba(196,136,43,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.align-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.align-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:10px}
+.align-body{font-size:14px;line-height:1.65;color:var(--mid)}
+
+/* PULL QUOTE */
+.pull-quote{background:var(--navy);border-radius:12px;padding:36px 40px;margin:32px 0;position:relative;overflow:hidden}
+.pull-quote::before{content:'\201C';font-family:'Playfair Display',serif;font-size:120px;line-height:1;color:rgba(196,136,43,.2);position:absolute;top:-10px;left:24px;pointer-events:none}
+.pull-quote p{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;font-style:italic;color:rgba(255,255,255,.9);line-height:1.6;margin-left:20px}
+.pull-quote-src{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--gold-lt);margin-top:14px;margin-left:20px}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse}
+.comp-table thead tr{border-bottom:2px solid var(--border)}
+.comp-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);padding:0 16px 12px;text-align:left}
+.comp-table th.col-r{text-align:right}
+.comp-table td{padding:14px 16px;border-bottom:1px solid rgba(221,216,206,.5);vertical-align:middle}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(196,136,43,.03)}
+.comp-dim{font-family:'DM Mono',monospace;font-size:11px;color:var(--dark);white-space:nowrap}
+.comp-bars-cell{width:200px;padding:14px 16px}
+.comp-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.comp-bar-row:last-child{margin-bottom:0}
+.comp-bar-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--light);width:52px;flex-shrink:0}
+.comp-bar-track{width:100px;height:7px;background:var(--cream);border-radius:3px;overflow:hidden;flex-shrink:0}
+.comp-bar-fill{height:100%;border-radius:3px}
+.comp-bar-fill.trad{background:rgba(27,58,92,.3)}
+.comp-bar-fill.sol{background:var(--orange)}
+.comp-detail{font-size:12px;color:var(--mid);vertical-align:middle}
+.comp-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;padding:3px 9px;border-radius:20px;background:rgba(46,125,82,.1);color:var(--green);border:1px solid rgba(46,125,82,.25);white-space:nowrap}
+
+/* EXIT */
+.exit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.exit-cell{background:#fff;padding:16px 20px;text-align:center;transition:background .2s}
+.exit-cell:hover{background:rgba(196,136,43,.06)}
+.exit-cell.hdr{background:var(--navy);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);padding:14px 20px}
+.exit-cell.hdr.accent{background:rgba(196,136,43,.15);color:var(--gold)}
+.exit-ev{font-family:'DM Mono',monospace;font-size:12px;color:var(--light);margin-bottom:4px}
+.exit-val{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--navy)}
+.exit-val.accent{color:var(--gold)}
+.exit-delta{font-size:11px;color:var(--green);margin-top:2px}
+
+/* REC */
+.rec-box{background:var(--navy-deep);border-radius:14px;padding:48px 52px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center}
+.rec-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:12px}
+.rec-body{font-size:15px;color:rgba(255,255,255,.65);line-height:1.75}
+.rec-amount{text-align:center;padding:28px 36px;border:1px solid rgba(196,136,43,.4);border-radius:12px;background:rgba(196,136,43,.08);white-space:nowrap}
+.rec-amount-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:10px}
+.rec-amount-val{font-family:'Playfair Display',serif;font-size:44px;font-weight:700;color:#fff}
+.rec-amount-note{font-size:12px;color:rgba(255,255,255,.4);margin-top:8px}
+
+.tag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--mid);margin-right:4px}
+.tag.blue{background:rgba(27,58,92,.08);border-color:rgba(27,58,92,.2);color:var(--navy)}
+.tag.gold{background:rgba(196,136,43,.1);border-color:rgba(196,136,43,.3);color:var(--gold)}
+
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--navy-deep);color:#fff;font-size:11px;font-family:'DM Mono',monospace;padding:6px 12px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:20}
+
+footer{background:var(--navy-deep);padding:32px 40px;display:flex;justify-content:space-between;align-items:center}
+footer .f-l{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.35)}
+footer .f-r{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.25)}
+
+@media(max-width:900px){
+  .deal-strip{grid-template-columns:repeat(3,1fr)}
+  .metrics-grid{grid-template-columns:repeat(3,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .three-col{grid-template-columns:1fr 1fr}
+  .rec-box{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">S</div>
+    <span class="nav-title">Strada Education Foundation</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#alignment">Alignment</a></li>
+    <li><a href="#changes">What's Changed</a></li>
+    <li><a href="#model">Business Model</a></li>
+    <li><a href="#performance">Performance</a></li>
+    <li><a href="#exit">Exit</a></li>
+    <li><a href="#recommendation">Recommendation</a></li>
+  </ul>
+  <span class="nav-badge">Follow-On · Mar 2026</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Strada Education Foundation · Follow-On Investment Recommendation</div>
+    <h1 class="hero-title">Sol <span>Health</span></h1>
+    <a href="https://www.solhealth.co" target="_blank" class="hero-link">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10 2L2 10M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      solhealth.co
+    </a>
+    <p class="hero-sub">Building the mental health workforce from the inside — a structured pathway from graduate training to licensed practice.</p>
+    <div class="deal-strip">
+      <div class="deal-item"><div class="deal-label">Instrument</div><div class="deal-value">SAFE</div><div class="deal-note">Post-Money Note</div></div>
+      <div class="deal-item"><div class="deal-label">Valuation</div><div class="deal-value hi">$14M</div><div class="deal-note">Post-Money Cap</div></div>
+      <div class="deal-item"><div class="deal-label">Total Raise</div><div class="deal-value">$750K</div><div class="deal-note">Led by BAM Ventures</div></div>
+      <div class="deal-item"><div class="deal-label">Strada Ask</div><div class="deal-value hi">$150K</div><div class="deal-note">Follow-On Allocation</div></div>
+      <div class="deal-item"><div class="deal-label">Prior Investment</div><div class="deal-value">$250K</div><div class="deal-note">Nov 2024 · $7M post</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════
+     01 · OVERVIEW
+══════════════════════════════════════ -->
+<section class="section" id="overview">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">What Sol Health Does</h2>
+  </div>
+
+  <div class="two-col" style="gap:48px;align-items:start;margin-bottom:40px">
+    <div>
+      <p style="font-size:16px;line-height:1.8;color:var(--mid);margin-bottom:18px">Sol Health is an integrated clinical workforce platform that solves one of mental health care's most stubborn bottlenecks: the broken, unpaid, and fragmented path from graduate education into licensure.</p>
+      <p style="font-size:16px;line-height:1.8;color:var(--mid);margin-bottom:24px">The company recruits therapists-in-training through university partnerships, provides paid clinical hours, expert supervision, and guaranteed caseload — then converts a significant share into revenue-generating associate therapists. The model simultaneously expands the mental health workforce and delivers affordable care to underserved populations.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="tag blue">Mental Health Workforce</span>
+        <span class="tag blue">Work-Based Learning</span>
+        <span class="tag gold">Affordability</span>
+        <span class="tag gold">Teletherapy</span>
+        <span class="tag">Seed Stage</span>
+      </div>
+    </div>
+
+    <!-- PIPELINE DIAGRAM (replacing flywheel) -->
+    <div class="chart-card" style="padding:28px">
+      <div class="chart-hdr">
+        <div>
+          <div class="chart-title">How the Model Works</div>
+        </div>
+      </div>
+
+      <!-- Row 1: Supply pipeline -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:10px">Supply Side</div>
+      <div style="display:flex;align-items:stretch;gap:0;margin-bottom:6px">
+        <div style="flex:1;background:rgba(232,116,74,.08);border:1px solid rgba(232,116,74,.3);border-radius:8px;padding:14px 14px">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:6px">~65 University Partners</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--orange)">140</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:2px">Graduate interns<br>Paid ~$150/mo stipend</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:0 10px;color:var(--gold);font-size:18px;font-weight:300">→</div>
+        <div style="flex:1;background:rgba(27,58,92,.06);border:1px solid rgba(27,58,92,.2);border-radius:8px;padding:14px 14px">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">55% conversion rate</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy)">21 active</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:2px">Associate therapists</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:0 10px;color:var(--gold);font-size:18px;font-weight:300">→</div>
+        <div style="flex:1;background:rgba(46,125,82,.06);border:1px solid rgba(46,125,82,.2);border-radius:8px;padding:14px 14px">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px">Full licensure</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--green)">Licensed</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:2px">~3,000 supervised<br>hours required</div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="border-top:1px dashed var(--border);margin:16px 0"></div>
+
+      <!-- Row 2: Demand side -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:10px">Demand Side</div>
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:8px">Intern Program — Client Source</div>
+          <div style="font-size:12px;color:var(--mid);line-height:1.6">Clients referred by <strong style="color:var(--dark)">youth nonprofit partners</strong> and community organizations.<br><br>Clients pay <strong style="color:var(--dark)">$0–$30 per session</strong> on a sliding scale based on financial need.</div>
+        </div>
+        <div style="flex:1;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:8px">Associate Program — Client Source</div>
+          <div style="font-size:12px;color:var(--mid);line-height:1.6">Clients come through <strong style="color:var(--dark)">Zocdoc</strong> and major <strong style="color:var(--dark)">insurance networks</strong> (Aetna, Cigna, BCBS).<br><br>Clients pay standard <strong style="color:var(--dark)">co-pays of $10–$35 per session</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="metrics-grid">
+    <div class="metric-card" data-tip="2.5× growth since investment"><div class="metric-label">Active Interns</div><div class="metric-value">140</div><div class="metric-change up">↑ from 57</div></div>
+    <div class="metric-card" data-tip="Core revenue driver"><div class="metric-label">Associates Active</div><div class="metric-value">21</div><div class="metric-change up">↑ up from 0</div></div>
+    <div class="metric-card" data-tip="~5.6× growth"><div class="metric-label">Total Clients</div><div class="metric-value">~1,100</div><div class="metric-change up">↑ from ~195</div></div>
+    <div class="metric-card" data-tip="7.5× growth"><div class="metric-label">Monthly Revenue</div><div class="metric-value">$150K</div><div class="metric-change up">↑ from ~$20K</div></div>
+    <div class="metric-card" data-tip="~3× year-over-year"><div class="metric-label">FY 2025 Revenue</div><div class="metric-value">$688K</div><div class="metric-change up">vs $215K in 2024</div></div>
+    <div class="metric-card" data-tip="Vs. ~8 wks industry avg"><div class="metric-label">Client Retention</div><div class="metric-value">~20 wk</div><div class="metric-change up">2.5× industry avg</div></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     02 · ALIGNMENT
+══════════════════════════════════════ -->
+<section class="section" id="alignment">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Strada Focus Area Alignment</h2>
+  </div>
+
+  <div class="two-col" style="margin-bottom:32px">
+    <div class="align-card">
+      <div class="align-icon">🏗️</div>
+      <div class="align-lbl">Work-Based Learning</div>
+      <div class="align-title">Employer Adoption of Quality WBL</div>
+      <div class="align-body">Sol functions as the employer for both interns and associates, delivering a structured, high-quality WBL experience that is fundamentally superior to the status quo. Consistent supervision, near-peer mentorship, and formalized training represent a best-in-class approach to clinical workforce preparation — while creating direct, paid pathways to licensure for underserved learners.</div>
+    </div>
+    <div class="align-card">
+      <div class="align-icon">💰</div>
+      <div class="align-lbl">Affordability</div>
+      <div class="align-title">Cost-Sharing Models</div>
+      <div class="align-body">Sol fundamentally shifts the financial burden of clinical training away from students — from zero compensation at traditional sites to monthly stipends (~$150/mo), with expanding grant-backed funding for select interns. Accelerating hour completion also reduces time-to-licensure, lowering the overall financial cost of entering the mental health workforce for underrepresented clinicians.</div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <p>"Sol takes away a lot of the logistical headaches and allows me to focus on the hands-on part of supervision."</p>
+    <div class="pull-quote-src">— Sol Health Supervisor, from Strada Reference Calls</div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     03 · WHAT HAS CHANGED
+══════════════════════════════════════ -->
+<section class="section" id="changes">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">What Has Changed Since Initial Investment</h2>
+  </div>
+
+  <div class="two-col" style="gap:48px;align-items:start;margin-bottom:36px">
+    <div>
+      <p style="font-size:15px;line-height:1.8;color:var(--mid);margin-bottom:16px">At the time of Strada's November 2024 investment, Sol operated primarily as an internship platform with limited monetization. The company has since undergone a fundamental shift — evolving into an integrated, revenue-generating clinical workforce platform.</p>
+      <p style="font-size:15px;line-height:1.8;color:var(--mid);margin-bottom:16px">The associate therapist program — clinicians who have graduated but require ~3,000 supervised hours prior to full licensure — has emerged as the primary revenue driver. This evolution reflects a more defined, scalable, and monetizable model than was in place at investment.</p>
+      <p style="font-size:15px;line-height:1.8;color:var(--mid)">On the demand side, Sol has also developed a more segmented approach: nonprofit partnerships drive low-cost intern-level care, while insurance networks (Aetna, Cigna, BCBS, Horizon NJ Medicaid) and Zocdoc power associate-level revenue.</p>
+    </div>
+
+    <!-- Changes table -->
+    <div class="fin-wrap">
+      <table class="fin-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th class="col-r">Nov 2024</th>
+            <th class="col-r">Mar 2026</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Interns</td><td class="col-r">57</td><td class="col-r pos"><strong>140</strong></td></tr>
+          <tr><td>Associate Therapists</td><td class="col-r">0</td><td class="col-r pos"><strong>21 active (30 committed)</strong></td></tr>
+          <tr><td>Supervisors</td><td class="col-r">21</td><td class="col-r pos"><strong>49 (~3:1 ratio)</strong></td></tr>
+          <tr><td>Clients</td><td class="col-r">~195</td><td class="col-r pos"><strong>~1,100</strong></td></tr>
+          <tr><td>Monthly Revenue</td><td class="col-r">~$20K</td><td class="col-r pos"><strong>~$150K</strong></td></tr>
+          <tr class="bold-row"><td>Primary Revenue Driver</td><td class="col-r">Intern program</td><td class="col-r warn">Associate program</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Operating metrics chart -->
+  <div class="chart-card">
+    <div class="chart-hdr">
+      <div>
+        <div class="chart-title">Operating Metrics: Nov 2024 → Mar 2026</div>
+        <div class="chart-sub">Indexed to 100 = value at time of investment (~16 months of growth)</div>
+      </div>
+      <span class="chart-tag">8× revenue growth</span>
+    </div>
+    <canvas id="metricsChart" height="160"></canvas>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     04 · BUSINESS MODEL
+══════════════════════════════════════ -->
+<section class="section" id="model">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Business Model Deep Dive</h2>
+  </div>
+
+  <div class="two-col" style="gap:48px;margin-bottom:36px">
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:16px">Supply — Therapist Pipeline</h3>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:7px">Interns — Top of Funnel</div>
+          <p style="font-size:13px;line-height:1.65;color:var(--mid)">Sourced through ~65 of ~100 active university partnerships. Paid stipends (~$150/mo), weekly individual + group supervision, caseload guarantee, and licensure prep. <strong style="color:var(--navy)">55% express interest in converting to associates.</strong></p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);margin-bottom:7px">Associates — Revenue Engine</div>
+          <p style="font-size:13px;line-height:1.65;color:var(--mid)">Pre-licensed clinicians sourced almost entirely from internal pipeline — a structural cost advantage vs. external recruiting. 21 active, 30 committed. Expected unit economics: <strong style="color:var(--navy)">~$100K ARR per associate at 30–35% contribution margins.</strong></p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:7px">Supervisors</div>
+          <p style="font-size:13px;line-height:1.65;color:var(--mid)">49 supervisors at ~3:1 ratio. Sol's platform removes administrative burden, allowing supervisors to focus on clinical mentorship rather than logistics.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:16px">Demand & Clinical Outcomes</h3>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:7px">Client Acquisition</div>
+          <p style="font-size:13px;line-height:1.65;color:var(--mid)">Interns: nonprofit + community partnerships → near-zero CAC, sliding scale $0–$30/session. Associates: Zocdoc + major payer networks → standard co-pays ($10–$35), cash-pay $80–$100. Many clients transition with their therapist as they move intern→associate, reducing churn.</p>
+        </div>
+        <div style="background:var(--navy);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:12px">Clinical Outcomes (PHQ-9 / GAD-7)</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff">90%</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">Show improvement in depression & anxiety after 1 month</div>
+            </div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff">3.81</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">Therapeutic alliance score out of 4.4 — strong client-provider relationships</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:7px">Geography</div>
+          <p style="font-size:13px;line-height:1.65;color:var(--mid)">Associates licensed in NY + NJ. Interns across ~26 states. Next expansion: Florida and Texas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOL VS STATUS QUO — clean comparison table -->
+  <div class="chart-card">
+    <div class="chart-hdr">
+      <div>
+        <div class="chart-title">Sol vs. Traditional Therapist Training</div>
+        <div class="chart-sub">Comparing Sol's model to the status quo at typical placement sites</div>
+      </div>
+    </div>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:170px">Dimension</th>
+          <th style="width:220px">Relative Performance</th>
+          <th>Detail</th>
+          <th class="col-r" style="width:130px">Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="comp-dim">Intern Compensation</td>
+          <td class="comp-bars-cell">
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Traditional</span><div class="comp-bar-track"><div class="comp-bar-fill trad" style="width:0%"></div></div></div>
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Sol Health</span><div class="comp-bar-track"><div class="comp-bar-fill sol" style="width:70%"></div></div></div>
+          </td>
+          <td class="comp-detail">Traditional sites universally unpaid. Sol provides ~$150/mo stipend + exploring grant-backed supplements.</td>
+          <td class="col-r"><span class="comp-badge">Sol Advantage</span></td>
+        </tr>
+        <tr>
+          <td class="comp-dim">Supervision Quality</td>
+          <td class="comp-bars-cell">
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Traditional</span><div class="comp-bar-track"><div class="comp-bar-fill trad" style="width:25%"></div></div></div>
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Sol Health</span><div class="comp-bar-track"><div class="comp-bar-fill sol" style="width:95%"></div></div></div>
+          </td>
+          <td class="comp-detail">Traditional: ad hoc or absent. Sol: weekly 1:1 + group supervision, near-peer mentors, ~3:1 ratio.</td>
+          <td class="col-r"><span class="comp-badge">Sol Advantage</span></td>
+        </tr>
+        <tr>
+          <td class="comp-dim">Client Retention</td>
+          <td class="comp-bars-cell">
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Industry avg</span><div class="comp-bar-track"><div class="comp-bar-fill trad" style="width:40%"></div></div></div>
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Sol Health</span><div class="comp-bar-track"><div class="comp-bar-fill sol" style="width:100%"></div></div></div>
+          </td>
+          <td class="comp-detail">Industry average ~8 weeks. Sol achieves ~20 weeks — driven by stronger matching and care continuity.</td>
+          <td class="col-r"><span class="comp-badge">2.5× Industry</span></td>
+        </tr>
+        <tr>
+          <td class="comp-dim">Path to Licensure</td>
+          <td class="comp-bars-cell">
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Traditional</span><div class="comp-bar-track"><div class="comp-bar-fill trad" style="width:43%"></div></div></div>
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Sol Health</span><div class="comp-bar-track"><div class="comp-bar-fill sol" style="width:82%"></div></div></div>
+          </td>
+          <td class="comp-detail">57% of masters-level graduates never reach licensure industry-wide. Sol accelerates hour completion and converts majority into associates.</td>
+          <td class="col-r"><span class="comp-badge">Sol Advantage</span></td>
+        </tr>
+        <tr>
+          <td class="comp-dim">Clinical Outcomes</td>
+          <td class="comp-bars-cell">
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Industry</span><div class="comp-bar-track"><div class="comp-bar-fill trad" style="width:50%"></div></div></div>
+            <div class="comp-bar-row"><span class="comp-bar-lbl">Sol Health</span><div class="comp-bar-track"><div class="comp-bar-fill sol" style="width:90%"></div></div></div>
+          </td>
+          <td class="comp-detail">90% of clients show improvement in depression/anxiety after 1 month. Therapeutic alliance 3.81/4.4.</td>
+          <td class="col-r"><span class="comp-badge">Strong Results</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     05 · FINANCIAL PERFORMANCE
+══════════════════════════════════════ -->
+<section class="section" id="performance">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Financial Performance vs. Underwriting</h2>
+  </div>
+
+  <div class="two-col" style="margin-bottom:28px">
+    <!-- Revenue chart -->
+    <div class="chart-card">
+      <div class="chart-hdr">
+        <div>
+          <div class="chart-title">Revenue Growth</div>
+          <div class="chart-sub">Monthly run-rate since investment</div>
+        </div>
+        <span class="chart-tag">On track Mar '26</span>
+      </div>
+      <canvas id="revenueChart" height="200"></canvas>
+    </div>
+
+    <!-- Margin chart + callout together -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="chart-card">
+        <div class="chart-hdr">
+          <div>
+            <div class="chart-title">Gross Margin Evolution</div>
+            <div class="chart-sub">Actual vs. original Strada forecast</div>
+          </div>
+          <span class="chart-tag">Model shift</span>
+        </div>
+        <canvas id="marginChart" height="180"></canvas>
+      </div>
+      <div class="callout">
+        <div class="callout-lbl">Why Margins Are Lower Than Forecast</div>
+        <p>The shift to an associate-driven model changed the cost structure. Unlike the intern program (near-zero direct cost), associates require therapist compensation, supervision, and client acquisition spend. At maturity, each associate is projected to generate ~$100K in annual revenue at <strong style="color:var(--navy)">30–35% contribution margins</strong> — a realistic economic model as the business scales. Revenue has largely tracked original underwriting; margin compression reflects deliberate model evolution.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FY 2025 Table -->
+  <div style="margin-bottom:28px">
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:14px">Full Year 2025 — Actuals vs. Underwriting</h3>
+    <div class="fin-wrap">
+      <table class="fin-table">
+        <thead>
+          <tr><th>Metric</th><th class="col-r">Original 2025 Forecast</th><th class="col-r">2025 Actual</th><th class="col-r">Variance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Revenue</td><td class="col-r">$882K</td><td class="col-r">$688K</td><td class="col-r warn">–$194K (–22%)</td></tr>
+          <tr><td>COGS</td><td class="col-r">$426K</td><td class="col-r">$586K</td><td class="col-r neg">+$160K</td></tr>
+          <tr><td>Gross Profit</td><td class="col-r">$455K</td><td class="col-r">$102K</td><td class="col-r neg">–$353K</td></tr>
+          <tr class="bold-row"><td>Gross Margin</td><td class="col-r">52%</td><td class="col-r warn">15%</td><td class="col-r neg">–37 pts</td></tr>
+          <tr><td>Operating Expenses</td><td class="col-r">$1.2M</td><td class="col-r pos">$1.08M</td><td class="col-r pos">–$120K ✓</td></tr>
+          <tr class="total-row"><td>Net Income</td><td class="col-r neg">($749K)</td><td class="col-r neg">($981K)</td><td class="col-r neg">–$232K</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- March 2026 + 2026 FY -->
+  <div class="two-col">
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:14px">March 2026 — Forecast vs. Estimate</h3>
+      <div class="fin-wrap">
+        <table class="fin-table">
+          <thead>
+            <tr><th>Metric</th><th class="col-r">Forecast</th><th class="col-r">Actual (Est.)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Revenue</td><td class="col-r">$143K</td><td class="col-r pos"><strong>$150K ✓</strong></td></tr>
+            <tr><td>COGS</td><td class="col-r">$78K</td><td class="col-r neg">$127K</td></tr>
+            <tr class="bold-row"><td>Gross Margin</td><td class="col-r">45%</td><td class="col-r warn">15%</td></tr>
+            <tr><td>Operating Expenses</td><td class="col-r">$166K</td><td class="col-r pos">$60K</td></tr>
+            <tr class="total-row"><td>Net Income</td><td class="col-r neg">($101K)</td><td class="col-r pos">($37K)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:14px">2026 Full Year Forecast</h3>
+      <div class="fin-wrap">
+        <table class="fin-table">
+          <thead>
+            <tr><th>Metric</th><th class="col-r">Original</th><th class="col-r">Mgmt.</th><th class="col-r">Strada</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Revenue</td><td class="col-r">$3.82M</td><td class="col-r">$3.80M</td><td class="col-r">$3.22M</td></tr>
+            <tr><td>COGS</td><td class="col-r">$1.23M</td><td class="col-r">$2.66M</td><td class="col-r">$2.43M</td></tr>
+            <tr class="bold-row"><td>Gross Margin</td><td class="col-r warn">68%</td><td class="col-r warn">30%</td><td class="col-r warn">24%</td></tr>
+            <tr><td>OpEx</td><td class="col-r">$3.20M</td><td class="col-r pos">$1.23M</td><td class="col-r pos">$1.23M</td></tr>
+            <tr class="total-row"><td>Net Income</td><td class="col-r neg">($0.62M)</td><td class="col-r pos">($0.10M)</td><td class="col-r neg">($0.44M)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     06 · EXIT
+══════════════════════════════════════ -->
+<section class="section" id="exit">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Exit Analysis</h2>
+  </div>
+
+  <div class="two-col" style="gap:48px;align-items:start">
+    <div>
+      <p style="font-size:15px;line-height:1.8;color:var(--mid);margin-bottom:24px">Participation in this follow-on increases Strada's ownership from <strong style="color:var(--navy)">3.57%</strong> to <strong style="color:var(--navy)">4.64%</strong>. Mental health workforce platforms have attracted meaningful M&A interest from health systems, payers, and diversified behavioral health acquirers.</p>
+      <div class="exit-grid" style="grid-template-columns:1fr 1fr">
+        <div class="exit-cell hdr">Without Participation (3.57%)</div>
+        <div class="exit-cell hdr accent">With Participation (4.64%)</div>
+
+        <div class="exit-cell"><div class="exit-ev">$75M exit</div><div class="exit-val">$2.68M</div></div>
+        <div class="exit-cell"><div class="exit-ev">$75M exit</div><div class="exit-val accent">$3.48M</div><div class="exit-delta">+$0.80M</div></div>
+
+        <div class="exit-cell"><div class="exit-ev">$100M exit</div><div class="exit-val">$3.57M</div></div>
+        <div class="exit-cell"><div class="exit-ev">$100M exit</div><div class="exit-val accent">$4.64M</div><div class="exit-delta">+$1.07M</div></div>
+
+        <div class="exit-cell"><div class="exit-ev">$125M exit</div><div class="exit-val">$4.46M</div></div>
+        <div class="exit-cell"><div class="exit-ev">$125M exit</div><div class="exit-val accent">$5.80M</div><div class="exit-delta">+$1.34M</div></div>
+
+        <div class="exit-cell"><div class="exit-ev">$150M exit</div><div class="exit-val">$5.36M</div></div>
+        <div class="exit-cell"><div class="exit-ev">$150M exit</div><div class="exit-val accent">$6.96M</div><div class="exit-delta">+$1.61M</div></div>
+
+        <div class="exit-cell"><div class="exit-ev">$200M exit</div><div class="exit-val">$7.14M</div></div>
+        <div class="exit-cell"><div class="exit-ev">$200M exit</div><div class="exit-val accent">$9.28M</div><div class="exit-delta">+$2.14M</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="chart-card">
+        <div class="chart-hdr">
+          <div>
+            <div class="chart-title">MOIC by Exit EV</div>
+            <div class="chart-sub">Total invested: $400K (incl. follow-on)</div>
+          </div>
+        </div>
+        <canvas id="returnChart" height="210"></canvas>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:12px">Use of Proceeds</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px">
+          <li style="display:flex;gap:10px;font-size:13px;color:var(--mid)"><span style="color:var(--gold);font-weight:600">→</span> Scale associate therapist platform — hiring, onboarding, supervisor network</li>
+          <li style="display:flex;gap:10px;font-size:13px;color:var(--mid)"><span style="color:var(--gold);font-weight:600">→</span> Client acquisition: Zocdoc, payer channels, employers & nonprofits</li>
+          <li style="display:flex;gap:10px;font-size:13px;color:var(--mid)"><span style="color:var(--gold);font-weight:600">→</span> EHR & measurement-based care infrastructure</li>
+          <li style="display:flex;gap:10px;font-size:13px;color:var(--mid)"><span style="color:var(--gold);font-weight:600">→</span> Geographic expansion: Florida and Texas as next two states</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     07 · RECOMMENDATION
+══════════════════════════════════════ -->
+<section class="section" id="recommendation">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Investment Recommendation</h2>
+  </div>
+
+  <div class="rec-box">
+    <div>
+      <div class="rec-title">Recommended: Invest $150K Follow-On</div>
+      <div class="rec-body" style="max-width:580px">
+        Since Strada's initial investment in November 2024, Sol has scaled revenue ~8× and is now tracking in line with original underwriting. The associate therapist program has emerged as a durable, monetizable revenue engine with validated unit economics. While gross margins came in below initial expectations, this reflects a deliberate model evolution — not a reversal of fundamentals. The focus now shifts from proof-of-concept to efficient scaling. Sol continues to be strongly aligned with Strada's focus areas of Work-Based Learning and Affordability, and this follow-on protects Strada's position and increases ownership from 3.57% to 4.64%.
+      </div>
+      <div style="display:flex;gap:14px;margin-top:24px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 18px;text-align:center">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Instrument</div>
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#fff">SAFE Note</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 18px;text-align:center">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Valuation Cap</div>
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#fff">$14M Post-Money</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 18px;text-align:center">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Lead Investor</div>
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#fff">BAM Ventures</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 18px;text-align:center">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Capital Source</div>
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#fff">Follow-On Allocation</div>
+        </div>
+      </div>
+    </div>
+    <div class="rec-amount">
+      <div class="rec-amount-lbl">Recommended Investment</div>
+      <div class="rec-amount-val">$150K</div>
+      <div class="rec-amount-note">of $750K total raise</div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(196,136,43,.3)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px">Ownership Post-Participation</div>
+        <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:var(--gold-lt)">4.64%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="f-l">Strada Education Foundation · Catalytic Capital Fund · Confidential · March 2026</div>
+  <div class="f-r">Sol Health (solhealth.co) · SAFE Note · $14M Post-Money</div>
+</footer>
+
+<script>
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#8896A8';
+
+const NAVY = '#1B3A5C', GOLD = '#C4882B', GOLDT = 'rgba(196,136,43,.15)', ORG = '#E8744A', ORGT = 'rgba(232,116,74,.15)', GRN = '#2E7D52';
+
+// Operating metrics chart (indexed)
+const metricsActualAt = { 'Interns': 57, 'Associates': 0, 'Clients': 195, 'Monthly Revenue': 20, 'Supervisors': 21 };
+const metricsActualNow = { 'Interns': 140, 'Associates': 21, 'Clients': 1100, 'Monthly Revenue': 150, 'Supervisors': 49 };
+const metricsUnits = { 'Interns': '', 'Associates': '', 'Clients': '', 'Monthly Revenue': 'K/mo', 'Supervisors': '' };
+const metricsPrefix = { 'Interns': '', 'Associates': '', 'Clients': '~', 'Monthly Revenue': '$', 'Supervisors': '' };
+new Chart(document.getElementById('metricsChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Interns', 'Associates', 'Clients', 'Monthly Revenue', 'Supervisors'],
+    datasets: [
+      { label: 'Nov 2024 (at investment)', data: [100, 0, 100, 100, 100],
+        backgroundColor: 'rgba(27,58,92,.2)', borderColor: NAVY, borderWidth: 1.5, borderRadius: 3 },
+      { label: 'Mar 2026 (today)', data: [246, 500, 564, 750, 233],
+        backgroundColor: 'rgba(196,136,43,.55)', borderColor: GOLD, borderWidth: 1.5, borderRadius: 3 }
+    ]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16 } },
+      tooltip: {
+        callbacks: {
+          label: function(c) {
+            const label = c.chart.data.labels[c.dataIndex];
+            const isNow = c.datasetIndex === 1;
+            const actual = isNow ? metricsActualNow[label] : metricsActualAt[label];
+            const pfx = metricsPrefix[label];
+            const unit = metricsUnits[label];
+            const formatted = label === 'Monthly Revenue' ? `$${actual}K/mo` : `${pfx}${actual.toLocaleString()}${unit}`;
+            return ` ${c.dataset.label}: ${formatted} (index: ${c.raw})`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { callback: v => v+'×' },
+        title: { display: true, text: 'Index (100 = at investment)', font: { size: 9 } } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Revenue chart
+new Chart(document.getElementById('revenueChart'), {
+  type: 'bar',
+  data: {
+    labels: ["Nov'24", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Mar'26"],
+    datasets: [{
+      label: 'Monthly Revenue ($K)',
+      data: [20, 35, 50, 75, 110, 150],
+      backgroundColor: [GOLDT,GOLDT,GOLDT,GOLDT,GOLDT,'rgba(196,136,43,.6)'],
+      borderColor: GOLD, borderWidth: 1.5, borderRadius: 4
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: c => ` $${c.raw}K` } } },
+    scales: {
+      y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { callback: v => `$${v}K` } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Margin chart
+new Chart(document.getElementById('marginChart'), {
+  type: 'line',
+  data: {
+    labels: ['At Investment', 'FY 2025 Actual', 'Mar 2026 Run-Rate', '2026 Forecast'],
+    datasets: [
+      { label: 'Original Strada Forecast', data: [52, 52, 45, 68],
+        borderColor: NAVY, backgroundColor: 'transparent', borderDash: [5,4],
+        borderWidth: 1.5, pointRadius: 4, pointBackgroundColor: NAVY },
+      { label: 'Actual / Updated', data: [null, 15, 15, 24],
+        borderColor: ORG, backgroundColor: 'rgba(232,116,74,.08)',
+        borderWidth: 2, pointRadius: 4, pointBackgroundColor: ORG, fill: true }
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14 } },
+      tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}%` } } },
+    scales: {
+      y: { min: 0, max: 80, grid: { color: 'rgba(0,0,0,.05)' }, ticks: { callback: v => `${v}%` } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Return MOIC chart
+new Chart(document.getElementById('returnChart'), {
+  type: 'line',
+  data: {
+    labels: ['$75M','$100M','$125M','$150M','$175M','$200M'],
+    datasets: [
+      { label: 'Without (3.57%)', data: [6.7, 8.9, 11.2, 13.4, 15.6, 17.9],
+        borderColor: NAVY, borderDash: [5,4], borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: NAVY, fill: false },
+      { label: 'With Participation (4.64%)', data: [8.7, 11.6, 14.5, 17.4, 20.3, 23.2],
+        borderColor: GOLD, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: GOLD, backgroundColor: GOLDT, fill: true }
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14 } },
+      tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}× MOIC` } } },
+    scales: {
+      y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { callback: v => `${v}×` },
+        title: { display: true, text: 'MOIC on $400K total invested', font: { size: 9 } } },
+      x: { grid: { display: false }, title: { display: true, text: 'Exit EV', font: { size: 9 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
